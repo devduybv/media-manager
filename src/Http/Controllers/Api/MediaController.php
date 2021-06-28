@@ -77,7 +77,6 @@ class MediaController extends ApiController
 
         $urls       = $request->input('urls');
         $collection = $request->has('collection') ? $request->input('collection') : null;
-
         $media = $this->repository->createMedias($urls, $collection);
 
         return $this->response->collection(collect($media), new $this->transformer());

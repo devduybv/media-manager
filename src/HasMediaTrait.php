@@ -23,7 +23,6 @@ use Spatie\MediaLibrary\MediaCollection\MediaCollection;
 use Spatie\MediaLibrary\MediaRepository;
 use Spatie\MediaLibrary\Models\Media;
 use VCComponent\Laravel\MediaManager\Entities\MediaItem;
-
 trait HasMediaTrait
 {
     /** @var Conversion[] */
@@ -543,10 +542,13 @@ trait HasMediaTrait
 
     public function registerMediaConversions(Media $media = null)
     {
-        $this->addMediaConversion('thumb')
-            ->width(config('vc-media-manager.thumb_size.width'))
-            ->height(config('vc-media-manager.thumb_size.width'))
+        $media_dimension = DB::table('media_dimensions')->where('model', 'media')->get();
+        foreach ($media_dimension as $item) {
+            $this->addMediaConversion($item->name)
+            ->width($item->width)
+            ->height($item->height)
             ->sharpen(10);
+        }
     }
 
     public function registerMediaCollections()
