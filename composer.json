@@ -14,7 +14,7 @@
     },
     "require": {
         "spatie/laravel-medialibrary": "7.19.5",
-        "webpress/core": "^2.1"
+        "webpress/core": "^3.0"
     },
     "prefer-stable": true,
     "extra": {
