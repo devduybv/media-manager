@@ -28,7 +28,7 @@ class MediaTransformer extends TransformerAbstract
             'alt_img'         => $model->alt_img,
             'order'           => $model->order_column,
             'original_url'    => $model->getFullUrl(),
-            'thumb_url'       => $model->getFullUrl(''),
+            'thumb_url'       => $model->getFullUrl(),
             'timestamps'      => [
                 'created_at' => $model->created_at,
                 'updated_at' => $model->updated_at,

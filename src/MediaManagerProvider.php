@@ -36,6 +36,7 @@ class MediaManagerProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
         $this->publishes([
             __DIR__ . '/../config/vc-media-manager.php' => config_path('vc-media-manager.php'),
+            __DIR__ . '/../database/seeds/MediaDimentionSeeder.php' => database_path('seeds/MediaDimentionSeeder.php')
         ], 'config');
 
         Relation::morphMap([
