@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use VCComponent\Laravel\MediaManager\Entities\MediaDimension;
 
-class MediaDimentionSeeder extends Seeder
+class MediaDimensionSeeder extends Seeder
 {
     /**
      * Run the database seeds.
