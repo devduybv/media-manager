@@ -18,11 +18,7 @@ class MediaManagerProvider extends ServiceProvider
      *
      * @return void
      */
-
-    public function __construc()
-    {
-        dd('ok');
-    }
+    
     public function register()
     {
         $this->app->bind("media", Media::class);
