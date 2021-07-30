@@ -17,7 +17,7 @@
     },
     "require": {
         "spatie/laravel-medialibrary": "7.19.5",
-        "webpress/core": "^2.1"
+        "webpress/core": "^3.0"
     },
     "require-dev": {
         "orchestra/testbench": "5.0.0"

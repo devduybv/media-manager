@@ -8,11 +8,11 @@
   - [Config](#config)
 - [Configuration](#configuration)
   - [URL Namespace](#url-namespace)
-- [APIs List](#apis-list)
 - [Prepare your model](#prepare-your-model)
 - [Associating media](#associating-media)
 - [Retrieve media](#retrieve-media)
 - [S3 Disk Configuration](#s3-disk-configuration)
+- [APIs List](#apis-list)
 
 The User Component package provides a convenient way of managing application's users.
 
@@ -108,28 +108,6 @@ You can modify the package url namespace to whatever you want by modifying the `
 MEDIA_MANAGER_NAMESPACE="your-namespace"
 ```
 
-# APIs List
-
-Here is the list of APIs provided by the package.
-
-| Verb   | URI                                              | Action                                 |
-| ------ | ------------------------------------------------ | -------------------------------------- |
-| GET    | `/api/{namespace}/collections`                   | Get list of collection with pagination |
-| GET    | `/api/{namespace}/collections/all`               | Get all collections                    |
-| GET    | `/api/{namespace}/collections/{id}`              | Get collection item                    |
-| POST   | `/api/{namespace}/collections`                   | Create collection                      |
-| PUT    | `/api/{namespace}/collections/{id}`              | Update collection                      |
-| DELETE | `/api/{namespace}/collections/{id}`              | Delete collection                      |
-| ------ | ------                                           | ------                                 |
-| GET    | `/api/{namespace}/media`                         | Get list of collection with pagination |
-| GET    | `/api/{namespace}/media/all`                     | Get all medias                         |
-| GET    | `/api/{namespace}/media/{id}`                    | Get collection item                    |
-| POST   | `/api/{namespace}/media`                         | Create collection                      |
-| PUT    | `/api/{namespace}/media/{id}`                    | Update collection                      |
-| DELETE | `/api/{namespace}/media/{id}`                    | Delete collection                      |
-| PUT    | `/api/{namespace}/media/{id}/collection/attach`  | Attach media to collection             |
-| PUT    | `/api/{namespace}/media/{id}/collection/detach`  | Detach media from collection           |
-
 # Prepare your model
 
 To associate media with a model, the model must implement the following interface and trait:
@@ -151,6 +129,17 @@ class Post extends Model implements HasMedia
 
 ```
 
+If you want your model has media that its dimension is configable, you should include `registerMediaConversions` method in your model.
+
+```php
+  public function registerMediaConversions(Media $media = null)
+  {
+    $media_dimension = MediaDimension::where('model', 'product')->get();
+    foreach ($media_dimension as $item) {
+      $this->addMediaConversion($item->name)->width($item->width)->height($item->height)->sharpen(10);
+    }
+  }
+```
 # Associating media
 
 You can associate a file with a model like this:
@@ -209,3 +198,26 @@ Make sure you configure the correct s3 url in `config/medialibrary.php` file:
     'domain' => 'https://'.env('AWS_BUCKET').'.s3-'.env('AWS_DEFAULT_REGION').'.amazonaws.com',
 ],
 ```
+
+      
+# APIs List
+
+Here is the list of APIs provided by the package.
+
+| Verb   | URI                                              | Action                                 |
+| ------ | ------------------------------------------------ | -------------------------------------- |
+| GET    | `/api/{namespace}/collections`                   | Get list of collection with pagination |
+| GET    | `/api/{namespace}/collections/all`               | Get all collections                    |
+| GET    | `/api/{namespace}/collections/{id}`              | Get collection item                    |
+| POST   | `/api/{namespace}/collections`                   | Create collection                      |
+| PUT    | `/api/{namespace}/collections/{id}`              | Update collection                      |
+| DELETE | `/api/{namespace}/collections/{id}`              | Delete collection                      |
+| ------ | ------                                           | ------                                 |
+| GET    | `/api/{namespace}/media`                         | Get list of collection with pagination |
+| GET    | `/api/{namespace}/media/all`                     | Get all medias                         |
+| GET    | `/api/{namespace}/media/{id}`                    | Get collection item                    |
+| POST   | `/api/{namespace}/media`                         | Create collection                      |
+| PUT    | `/api/{namespace}/media/{id}`                    | Update collection                      |
+| DELETE | `/api/{namespace}/media/{id}`                    | Delete collection                      |
+| PUT    | `/api/{namespace}/media/{id}/collection/attach`  | Attach media to collection             |
+| PUT    | `/api/{namespace}/media/{id}/collection/detach`  | Detach media from collection           |

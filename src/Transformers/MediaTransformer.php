@@ -20,6 +20,7 @@ class MediaTransformer extends TransformerAbstract
             'model_id' => $model->model_id,
             'model_type' => $model->model_type,
             'collection_name' => $model->collection_name,
+
             'name' => $model->name,
             'file_name' => $model->file_name,
             'mime_type' => $model->mime_type,
