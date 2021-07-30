@@ -5,11 +5,11 @@ namespace VCComponent\Laravel\MediaManager;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use VCComponent\Laravel\MediaManager\Entities\MediaItem;
-use VCComponent\Laravel\MediaManager\Services\Media;
 use VCComponent\Laravel\MediaManager\Repositories\CollectionRepositoryImpl;
 use VCComponent\Laravel\MediaManager\Repositories\Contracts\CollectionRepository;
 use VCComponent\Laravel\MediaManager\Repositories\Contracts\MediaRepository;
 use VCComponent\Laravel\MediaManager\Repositories\MediaRepositoryImpl;
+use VCComponent\Laravel\MediaManager\Services\Media;
 
 class MediaManagerProvider extends ServiceProvider
 {
@@ -18,10 +18,15 @@ class MediaManagerProvider extends ServiceProvider
      *
      * @return void
      */
+
+    public function __construc()
+    {
+        dd('ok');
+    }
     public function register()
     {
         $this->app->bind("media", Media::class);
-        $this->app->bind(CollectionMediaRepository::class, CollectionRepositoryImpl::class);
+        $this->app->bind(CollectionRepository::class, CollectionRepositoryImpl::class);
         $this->app->bind(MediaRepository::class, MediaRepositoryImpl::class);
     }
 

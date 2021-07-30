@@ -16,8 +16,8 @@ class CollectionController extends ApiController
 
     public function __construct(CollectionRepository $repository)
     {
-        $this->repository  = $repository;
-        $this->entity      = $repository->getEntity();
+        $this->repository = $repository;
+        $this->entity = $repository->getEntity();
         $this->transformer = CollectionTransformer::class;
     }
 
@@ -76,7 +76,7 @@ class CollectionController extends ApiController
 
     public function store(Request $request)
     {
-        $data         = $request->all();
+        $data = $request->all();
         $data['slug'] = $data['name'];
 
         $collection = $this->repository->create($data);
