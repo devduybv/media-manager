@@ -24,9 +24,9 @@ class Collection extends Model
 
     private function checkUniqueSlug($slug, $count)
     {
-        $value     = $slug;
+        $value = $slug;
         $condition = $this->where('slug', $slug)->first();
-        $suffix    = $count;
+        $suffix = $count;
 
         if ($condition) {
             $suffix++;
