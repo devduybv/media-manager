@@ -38,8 +38,7 @@ class MediaRepositoryImpl extends BaseRepository implements MediaRepository
     {
         $collection = $collection ? $collection : 'default';
         $media_item = MediaItem::create(['url' => $url]);
-        $media      = $media_item->addMediaFromUrl($url)->toMediaCollection($collection);
-
+        $media = $media_item->addMediaFromUrl($url)->toMediaCollection($collection);
         return $media;
     }
     public function createMedias($urls, $collection = null)
@@ -58,7 +57,6 @@ class MediaRepositoryImpl extends BaseRepository implements MediaRepository
         }
         return $medias;
     }
-
 
     public function findById($id)
     {

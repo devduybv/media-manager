@@ -2,10 +2,10 @@
 
 return [
 
-    'namespace'  => env('MEDIA_MANAGER_NAMESPACE', 'media-manager'),
+    'namespace' => env('MEDIA_MANAGER_NAMESPACE', 'media-manager'),
 
     'thumb_size' => [
-        'width'  => 368,
+        'width' => 368,
         'height' => 232,
     ],
 

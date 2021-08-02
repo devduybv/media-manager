@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 
-$api       = app('Dingo\Api\Routing\Router');
+$api = app('Dingo\Api\Routing\Router');
 $namespace = config('vc-media-manager.namespace');
 
 $api->version('v1', function ($api) use ($namespace) {

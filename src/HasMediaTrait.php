@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\File;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\Conversion\Conversion;
@@ -23,6 +24,7 @@ use Spatie\MediaLibrary\MediaCollection\MediaCollection;
 use Spatie\MediaLibrary\MediaRepository;
 use Spatie\MediaLibrary\Models\Media;
 use VCComponent\Laravel\MediaManager\Entities\MediaItem;
+
 trait HasMediaTrait
 {
     /** @var Conversion[] */
@@ -225,7 +227,7 @@ trait HasMediaTrait
         return app(MediaRepository::class)->getCollection($this, $collectionName, $filters);
     }
 
-    public function getFirstMedia(string $collectionName = 'default', array $filters = []): ? Media
+    public function getFirstMedia(string $collectionName = 'default', array $filters = []): ?Media
     {
         $media = $this->getMedia($collectionName, $filters);
 
@@ -315,9 +317,9 @@ trait HasMediaTrait
     {
         $this->removeMediaItemsNotPresentInArray($newMediaArray, $collectionName);
 
-        $mediaClass    = config('medialibrary.media_model');
+        $mediaClass = config('medialibrary.media_model');
         $mediaInstance = new $mediaClass();
-        $keyName       = $mediaInstance->getKeyName();
+        $keyName = $mediaInstance->getKeyName();
 
         return collect($newMediaArray)
             ->map(function (array $newMediaItem) use ($collectionName, $mediaClass, $keyName) {
@@ -545,9 +547,9 @@ trait HasMediaTrait
         $media_dimension = DB::table('media_dimensions')->where('model', 'media')->get();
         foreach ($media_dimension as $item) {
             $this->addMediaConversion($item->name)
-            ->width($item->width)
-            ->height($item->height)
-            ->sharpen(10);
+                ->width($item->width)
+                ->height($item->height)
+                ->sharpen(10);
         }
     }
 

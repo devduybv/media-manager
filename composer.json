@@ -1,20 +1,26 @@
 {
     "name": "webpress/media-manager",
-    "authors": [
-        {
-            "name": "sonhaichu",
-            "email": "sonhaichu@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "sonhaichu",
+        "email": "sonhaichu@gmail.com"
+    }],
     "autoload": {
         "classmap": ["src"],
         "psr-4": {
             "VCComponent\\Laravel\\MediaManager\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "VCComponent\\Laravel\\MediaManager\\Test\\": "tests/"
+        }
+    },
     "require": {
         "spatie/laravel-medialibrary": "7.19.5",
         "webpress/core": "^3.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "5.0.0"
     },
     "prefer-stable": true,
     "extra": {
@@ -23,5 +29,10 @@
                 "VCComponent\\Laravel\\MediaManager\\MediaManagerProvider"
             ]
         }
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit --color=always"
+        ]
     }
 }

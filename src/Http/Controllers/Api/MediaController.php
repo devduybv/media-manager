@@ -15,8 +15,8 @@ class MediaController extends ApiController
 
     public function __construct(MediaRepository $repository)
     {
-        $this->repository  = $repository;
-        $this->entity      = $repository->getEntity();
+        $this->repository = $repository;
+        $this->entity = $repository->getEntity();
         $this->transformer = MediaTransformer::class;
     }
 
@@ -56,7 +56,6 @@ class MediaController extends ApiController
         } else {
             $transformer = new $this->transformer();
         }
-
         return $this->response->collection($medias, $transformer);
     }
 
@@ -75,7 +74,7 @@ class MediaController extends ApiController
     public function createMedias(Request $request)
     {
 
-        $urls       = $request->input('urls');
+        $urls = $request->input('urls');
         $collection = $request->has('collection') ? $request->input('collection') : null;
         $media = $this->repository->createMedias($urls, $collection);
 
@@ -84,7 +83,7 @@ class MediaController extends ApiController
 
     public function store(Request $request)
     {
-        $url        = $request->input('url');
+        $url = $request->input('url');
         $collection = $request->has('collection') ? $request->input('collection') : null;
 
         $media = $this->repository->createMedia($url, $collection);
