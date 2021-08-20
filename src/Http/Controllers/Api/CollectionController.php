@@ -19,6 +19,15 @@ class CollectionController extends ApiController
         $this->repository = $repository;
         $this->entity = $repository->getEntity();
         $this->transformer = CollectionTransformer::class;
+        if (config('media.auth_middleware.admin.middleware') !== '') {
+            $this->middleware(
+                config('media.auth_middleware.admin.middleware'),
+                ['except' => config('media.auth_middleware.admin.except')]
+            );
+        }
+        else {
+            throw new Exception("Admin middleware configuration is required");
+        }
     }
 
     public function index(Request $request)

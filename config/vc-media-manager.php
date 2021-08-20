@@ -8,5 +8,10 @@ return [
         'width' => 368,
         'height' => 232,
     ],
-
+    'auth_middleware' => [
+        'admin'    => [
+            'middleware' => '',
+            'except'     => [],
+        ]
+    ]
 ];
