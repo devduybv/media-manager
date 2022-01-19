@@ -74,13 +74,16 @@ class MediaController extends ApiController
             if ($success) {
                 switch ($upload_file_type) {
                     case MediaController::LOCAL_UPLOAD_TYPE:
-                        $result = $this->response->array(['success' => $success, 'path' => url($path)]);
+                        $url =  url($path);
                         break;
                     case MediaController::S3_UPLOAD_TYPE:
-                        $result = $this->response->array(['success' => $success, 'path' => url(Storage::cloud()->url($path))]);
+                         $url = url(Storage::cloud()->url($path));
                         break;
                 }
-                return $result;
+                $collection = $request->has('collection') ? $request->input('collection') : null;
+                $media = $this->repository->createMedia($url, $collection);
+
+                return $this->response->item($media, new $this->transformer());
 
             } else {
                 return $this->response->error('can\'t upload file', 1009);
