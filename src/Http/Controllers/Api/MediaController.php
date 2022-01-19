@@ -3,6 +3,10 @@
 namespace VCComponent\Laravel\MediaManager\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use VCComponent\Laravel\MediaManager\Repositories\Contracts\MediaRepository;
 use VCComponent\Laravel\MediaManager\Transformers\MediaTransformer;
 use VCComponent\Laravel\Vicoders\Core\Controllers\ApiController;
@@ -12,6 +16,8 @@ class MediaController extends ApiController
     protected $repository;
     protected $entity;
     protected $transformer;
+    const LOCAL_UPLOAD_TYPE = 'local';
+    const S3_UPLOAD_TYPE = 's3';
 
     public function __construct(MediaRepository $repository)
     {
@@ -23,9 +29,62 @@ class MediaController extends ApiController
                 config('media.auth_middleware.admin.middleware'),
                 ['except' => config('media.auth_middleware.admin.except')]
             );
-        }
-        else {
+        } else {
             throw new Exception("Admin middleware configuration is required");
+        }
+    }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'mimes:jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx,mp3,mp4,svg'],
+        ]);
+        $upload_file_type = Config::get('filesystems.default');
+
+        if (!$request->hasFile('file')) {
+            throw new NotFoundException("File");
+        } else {
+            $file = $request->file('file');
+            $origin_name = $file->getClientOriginalName();
+            $file_extension = $file->getClientOriginalExtension();
+            if (!is_null($file_extension)) {
+                $file_name = Str::snake(str_replace('.' . $file_extension, '', $origin_name));
+                switch ($upload_file_type) {
+                    case MediaController::LOCAL_UPLOAD_TYPE:
+                        $path = $this->upload_directory . "/" . time() . "_{$file_name}.{$file_extension}";
+                        break;
+                    case MediaController::S3_UPLOAD_TYPE:
+                        $path = $upload_path . "/" . time() . "_{$file_name}.{$file_extension}";
+                        break;
+                }
+            } else {
+                switch ($upload_file_type) {
+                    case MediaController::LOCAL_UPLOAD_TYPE:
+                        $path = $this->upload_directory . "/" . time() . "_{$file_name}";
+                        break;
+                    case MediaController::S3_UPLOAD_TYPE:
+                        $path = "/" . time() . "_{$file_name}";
+                        break;
+                }
+            }
+            $path = strtolower($path);
+
+            $success = Storage::disk($upload_file_type)->put($path, File::get($file));
+
+            if ($success) {
+                switch ($upload_file_type) {
+                    case MediaController::LOCAL_UPLOAD_TYPE:
+                        $result = $this->response->array(['success' => $success, 'path' => url($path)]);
+                        break;
+                    case MediaController::S3_UPLOAD_TYPE:
+                        $result = $this->response->array(['success' => $success, 'path' => url(Storage::cloud()->url($path))]);
+                        break;
+                }
+                return $result;
+
+            } else {
+                return $this->response->error('can\'t upload file', 1009);
+            }
         }
     }
 
@@ -94,7 +153,6 @@ class MediaController extends ApiController
     {
         $url = $request->input('url');
         $collection = $request->has('collection') ? $request->input('collection') : null;
-
         $media = $this->repository->createMedia($url, $collection);
 
         return $this->response->item($media, new $this->transformer());

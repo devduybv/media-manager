@@ -16,6 +16,7 @@ $api->version('v1', function ($api) use ($namespace) {
         $api->resource('collections', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\CollectionController');
         //Media
         $api->get('media/all', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\MediaController@all');
+        $api->post('media/upload', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\MediaController@upload');
         $api->put('media/{id}/collection/attach', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\MediaController@attachToCollection');
         $api->put('media/{id}/collection/detach', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\MediaController@detachFromCollection');
         $api->post('media/bulk', 'VCComponent\Laravel\MediaManager\Http\Controllers\Api\MediaController@createMedias');
