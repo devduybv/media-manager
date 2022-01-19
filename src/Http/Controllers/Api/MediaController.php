@@ -43,52 +43,38 @@ class MediaController extends ApiController
 
         if (!$request->hasFile('file')) {
             throw new NotFoundException("File");
-        } else {
-            $file = $request->file('file');
-            $origin_name = $file->getClientOriginalName();
-            $file_extension = $file->getClientOriginalExtension();
-            if (!is_null($file_extension)) {
-                $file_name = Str::snake(str_replace('.' . $file_extension, '', $origin_name));
-                switch ($upload_file_type) {
-                    case MediaController::LOCAL_UPLOAD_TYPE:
-                        $path = $this->upload_directory . "/" . time() . "_{$file_name}.{$file_extension}";
-                        break;
-                    case MediaController::S3_UPLOAD_TYPE:
-                        $path = $upload_path . "/" . time() . "_{$file_name}.{$file_extension}";
-                        break;
-                }
-            } else {
-                switch ($upload_file_type) {
-                    case MediaController::LOCAL_UPLOAD_TYPE:
-                        $path = $this->upload_directory . "/" . time() . "_{$file_name}";
-                        break;
-                    case MediaController::S3_UPLOAD_TYPE:
-                        $path = "/" . time() . "_{$file_name}";
-                        break;
-                }
-            }
-            $path = strtolower($path);
-
-            $success = Storage::disk($upload_file_type)->put($path, File::get($file));
-
-            if ($success) {
-                switch ($upload_file_type) {
-                    case MediaController::LOCAL_UPLOAD_TYPE:
-                        $url =  url($path);
-                        break;
-                    case MediaController::S3_UPLOAD_TYPE:
-                         $url = url(Storage::cloud()->url($path));
-                        break;
-                }
-                $collection = $request->has('collection') ? $request->input('collection') : null;
-                $media = $this->repository->createMedia($url, $collection);
-
-                return $this->response->item($media, new $this->transformer());
-
-            } else {
-                return $this->response->error('can\'t upload file', 1009);
-            }
         }
+        $file = $request->file('file');
+        $origin_name = $file->getClientOriginalName();
+        $file_extension = $file->getClientOriginalExtension();
+        $file_name = Str::snake(str_replace('.' . $file_extension, '', $origin_name));
+
+        if (!is_null($file_extension)) {
+
+            $path = $this->upload_directory . "/" . time() . "_{$file_name}.{$file_extension}";
+
+        } else {
+
+            $path = $this->upload_directory . "/" . time() . "_{$file_name}";
+
+        }
+        $path = strtolower($path);
+
+        $success = Storage::disk($upload_file_type)->put($path, File::get($file));
+
+        if ($success) {
+
+            $url = url($path);
+
+            $collection = "default";
+            $media = $this->repository->createMedia($url, $collection);
+
+            return $this->response->item($media, new $this->transformer());
+
+        } else {
+            return $this->response->error('can\'t upload file', 1009);
+        }
+
     }
 
     public function index(Request $request)
